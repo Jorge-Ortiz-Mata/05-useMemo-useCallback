@@ -6,9 +6,6 @@ interface DemoProps {
 
 const Demo = ({initializeParent}:DemoProps) => {
 
-  console.log('Changing text...');
-
-
   return (
     <div>
       {

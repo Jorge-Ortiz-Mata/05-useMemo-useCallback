@@ -1,15 +1,16 @@
 import React from 'react';
 
 interface ButtonProps {
-  onPress: () => void
+  onPress: () => void,
+  title: string
 }
 
-const Button = ({onPress}:ButtonProps) => {
+const Button = ({onPress, title}:ButtonProps) => {
 
-  console.log('OK')
+  console.log(`Button: ${title}`);
 
   return(
-    <button onClick={onPress}>Click me</button>
+    <button onClick={onPress}>{title}</button>
   )
 }
 
