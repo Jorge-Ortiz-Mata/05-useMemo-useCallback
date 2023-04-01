@@ -1,46 +1,97 @@
-# Getting Started with Create React App
+# 05 - React and TypeScript App.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## React.memo(MyComponent).
+****
 
-## Available Scripts
+When updating a state in a parent component, all of their children will be re-evaluated as well. React.memo allows us to not re-evaluate a child component if a props didn't change.
 
-In the project directory, you can run:
+### Child Component.
 
-### `npm start`
+```typescript
+const Demo = ({initializeParent}:DemoProps) => {
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+  return (
+    <div>
+      ...
+    </div>
+  )
+}
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+export default React.memo(Demo);
+```
 
-### `npm test`
+**Notes:**
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+It works with booleans, strings and numbers.
+It doesn't work with arrays, objects or functions.
 
-### `npm run build`
+### Button Component.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```typescript
+const Button = ({initializeParent}:DemoProps) => {
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  const handleClick = ():void => {
+    console.log('Do some changes...');
+  }
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  return (
+    <button onClick={handleClick}>Click me</button>
+  )
+}
 
-### `npm run eject`
+export default React.memo(Button);
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## useCallback Hook.
+****
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+useCallback Hook allows us to store a function across multiple components. This means that it points to same registry, so that prevents the re-evaluation of any component using arrays, objects or functions.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Button.tsx
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```typescript
+import React from 'react';
 
-## Learn More
+interface ButtonProps {
+  onPress: () => void
+}
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+const Button = ({onPress}:ButtonProps) => {
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+  console.log('OK')
+
+  return(
+    <button onClick={onPress}>Click me</button>
+  )
+}
+
+export default React.memo(Button);
+```
+
+### App.js
+
+```typescript
+import { useState, useCallback } from 'react';
+import Demo from './components/Demo/Demo';
+import Button from './components/Button';
+
+function App() {
+  const [initialize, setInitialize] = useState(false);
+
+  const handleClick = useCallback(() => {
+    setInitialize(prevState => !prevState);
+  }, []);
+
+  console.log('App Component');
+
+  return (
+    <div>
+      <h1>Hello World</h1>
+      <Button onPress={handleClick} />
+      <Demo initializeParent={initialize} />
+    </div>
+  );
+}
+
+export default App;
+```
