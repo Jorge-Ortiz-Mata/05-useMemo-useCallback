@@ -95,3 +95,51 @@ function App() {
 
 export default App;
 ```
+
+## useMemo Hook.
+****
+
+Similar to useCallback but with the difference that this could applied to single data instead of the entire data.
+
+### Numbers.jsx
+
+```typescript
+import { useMemo } from 'react';
+
+interface NumbersProps {
+  title: string,
+  numbers: number[]
+}
+
+const Numbers = ({title, numbers}:NumbersProps) => {
+  const numbersArray = useMemo(() => {
+    const numbersSort = numbers.sort((a: number, b: number):number => {
+      console.log('Sorting...');
+
+      return a - b;
+    });
+
+    return numbersSort;
+  }, [])
+
+  console.log(numbersArray);
+
+
+  return(
+    <>
+      {
+        numbersArray.map((number) => <p key={number}>{number}</p> )
+      }
+      <p>{title}</p>
+    </>
+  )
+}
+
+export default Numbers;
+```
+
+```typescript
+....
+<Numbers title='My name' numbers={[1, 5, 8, 9, 14, 6, 17, 20]} />
+....
+```
